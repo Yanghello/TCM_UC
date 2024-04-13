@@ -188,7 +188,8 @@ def evaluate(args, model, eval_dataset, flag=False):
     dev_acc = accuracy_score(labels_all, predict_all)
     dev_loss = eval_loss / nb_eval_steps
     if flag:
-        report = classification_report(labels_all, predict_all, target_names=args.label_list, digits=4)
+        print(f"labels_all: {labels_all}, predict_all: {predict_all}, target_names: {args.label_list}")
+        report = classification_report(labels_all, predict_all,target_names=args.label_list, digits=4)
         confusion = confusion_matrix(labels_all, predict_all)
         return dev_acc, dev_loss, report, confusion
     return dev_acc, dev_loss

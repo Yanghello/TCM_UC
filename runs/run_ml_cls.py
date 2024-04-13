@@ -30,22 +30,33 @@ def load_model(filename):
 
 
 def train(args, X_train, X_dev, X_test, train_labels, dev_labels, test_labels):
+    classes_weights = None
     if args.model_type == "dt":
         # 决策树
         clf = DecisionTreeClassifier()
     elif args.model_type == "rf":
         # 随机森林
-        clf = RandomForestClassifier(n_jobs=args.n_jobs)
+        clf = RandomForestClassifier(n_jobs=args.n_jobs, verbose=3)
     elif args.model_type == "svm":
         # SVM
-        clf = LinearSVC()
+        clf = LinearSVC(verbose=3)
     elif args.model_type == "xgb":
+        params = {"verbosity":3, "early_stopping_rounds":200, "learning_rate":0.3, "n_estimators":100, "max_bin":30000, "eval_metric":["mlogloss","merror"]}
         # XGBoost
-        clf = xgb.XGBClassifier()
+        clf = xgb.XGBClassifier(**params)
+        from sklearn.utils import class_weight
+        classes_weights = class_weight.compute_sample_weight(
+            class_weight='balanced',
+            y=train_labels
+        )
+        print("classes_weights:", classes_weights)
     elif args.model_type == "lr":
         clf = LogisticRegression()
     # 训练模型
-    clf.fit(X_train, train_labels)
+    if args.model_type == "xgb":
+        clf.fit(X_train, train_labels, eval_set=[(X_dev, dev_labels)], sample_weight=classes_weights)
+    else:
+        clf.fit(X_train, train_labels)
     if hasattr(clf, "predict_proba"):
         y_train_pred_proba = clf.predict_proba(X_train)
         y_dev_pred_proba = clf.predict_proba(X_dev)
