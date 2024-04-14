@@ -1,0 +1,55 @@
+nohup: ignoring input
+current path: /home/yangqingyou/workspace/zyy/Pytorch-Chinese-Text-Classification
+load datasets is finished...
+transform feature is finished...
+[LibLinear]....*
+optimization finished, #iter = 41
+Objective value = -194.819686
+nSV = 594
+...*
+optimization finished, #iter = 33
+Objective value = -14.697199
+nSV = 253
+...*.
+optimization finished, #iter = 40
+Objective value = -130.233012
+nSV = 558
+...*.
+optimization finished, #iter = 40
+Objective value = -67.033525
+nSV = 463
+...*.
+optimization finished, #iter = 40
+Objective value = -38.279472
+nSV = 396
+...*.
+optimization finished, #iter = 40
+Objective value = -110.027845
+nSV = 538
+....*
+optimization finished, #iter = 42
+Objective value = -127.077856
+nSV = 541
+train loss: 1.1475521277683125, train acc: 0.982200647249191, dev loss: 1.5310403926386145, dev acc: 0.5548387096774193
+test loss: 1.5310403926386145, test acc: 0.5548387096774193
+              precision    recall  f1-score   support
+
+           0       0.56      0.75      0.64        59
+           1       0.00      0.00      0.00         1
+           2       0.38      0.19      0.25        32
+           3       0.50      0.27      0.35        15
+           4       1.00      0.33      0.50         3
+           5       0.60      0.64      0.62        14
+           6       0.63      0.71      0.67        31
+
+    accuracy                           0.55       155
+   macro avg       0.52      0.41      0.43       155
+weighted avg       0.54      0.55      0.53       155
+
+[[44  1  7  0  0  4  3]
+ [ 1  0  0  0  0  0  0]
+ [20  0  6  2  0  0  4]
+ [ 4  0  0  4  0  2  5]
+ [ 0  0  1  1  1  0  0]
+ [ 4  0  0  0  0  9  1]
+ [ 6  0  2  1  0  0 22]]
