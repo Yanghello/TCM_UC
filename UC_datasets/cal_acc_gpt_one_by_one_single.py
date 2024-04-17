@@ -7,7 +7,7 @@ def cal_acc(y_true, y_pred):
     print("confusion_matrix:\n", confusion_matrix(y_true, y_pred))
     return accuracy_score(y_true, y_pred)
 
-input_file = "./验证数据集-逐个输出.xlsx"
+input_file = "./验证数据集-逐个输出(单症型).xlsx"
 data = pd.read_excel(input_file, sheet_name="Sheet1")
 
 labels = set(["1=大肠湿热","2=热毒炽盛","3=脾虚湿蕴","4=寒热错杂","5=瘀阻肠络","6=肝郁脾虚","7=脾肾阳虚"])
@@ -36,6 +36,8 @@ def correct(label):
         return "7=脾肾阳虚"
     elif label == "1=湿热蕴肠":
         return "1=大肠湿热"
+    elif label == "1":
+        return "1=大肠湿热"
     else:
         raise Exception(f"err_label: {label}")
         
@@ -46,17 +48,18 @@ label_count = 0
 label_count_raw = 0
 c = re.compile('[0-9]+')
 for i in range(len(y_pred_)):
-    y_ = re.split("[,，]+",y_pred_[i])
+    y_ = re.split("[,，/]+",y_pred_[i])
     y = []
     for y_i in y_:
         if y_i is not None and y_i != '':
             y.append(correct(y_i.strip()))
+            break
     label_count_raw += len(y)
     label_count += len(set(y))
     y_str = ",".join(y)
     y_pred_str.append(y_str)
     y_all = c.findall(y_str)
-    assert len(y_all) > 0
+    assert len(y_all) == 1
     y_all = [int(d) for d in y_all]
     if y_true[i] in set(y_all):
         y_pred.append(y_true[i])
@@ -64,10 +67,10 @@ for i in range(len(y_pred_)):
         y_pred.append(y_all[0])
 
 print("raw label count", label_count_raw)
-print("acc[gpt4-逐个输出]:", cal_acc(y_true, y_pred))
+print("acc[gpt4-逐个输出（单症型）]:", cal_acc(y_true, y_pred))
 print("total label count", label_count, ", average count per sample: ", label_count/len(y_pred_))
 
 data["推断症型"] = y_pred_str
-data.to_excel("./验证数据集-gpt4-逐个输出_corrected.xlsx", index=False)
+data.to_excel("./验证数据集-gpt4-逐个输出(单症型)_corrected.xlsx", index=False)
 
 

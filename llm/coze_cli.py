@@ -21,13 +21,14 @@ parser.add_argument('--row_begin', type=int, default=0, help='row begin')
 parser.add_argument('--row_end', type=int, default=1000, help='row end')
 parser.add_argument('--mode', type=str, default="", help='o/a')
 parser.add_argument('--out_file', type=str, default="验证数据集-逐个输出.xlsx", help='output file name')
+parser.add_argument("--cache_db_file", type=str, default="response_cache.db", help='cache db file')
 
 
 args = parser.parse_args()
 logging.basicConfig(level=logging.DEBUG)
 
 # Step 1: Connect to the SQLite database file (it will be created if it doesn't exist)
-conn = sqlite3.connect('response_cache.db')
+conn = sqlite3.connect(args.cache_db_file)
 
 # Step 2: Create a cursor object using the connection
 cursor = conn.cursor()
