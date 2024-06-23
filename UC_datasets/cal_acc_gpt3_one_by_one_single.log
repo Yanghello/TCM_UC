@@ -1,0 +1,27 @@
+nohup: ignoring input
+raw label count 155
+classification_report:
+               precision    recall  f1-score   support
+
+           1       0.56      0.68      0.61        59
+           2       0.00      0.00      0.00         1
+           3       0.35      0.28      0.31        32
+           4       0.50      0.07      0.12        15
+           5       0.12      0.33      0.18         3
+           6       0.25      0.29      0.27        14
+           7       0.27      0.23      0.25        31
+
+    accuracy                           0.40       155
+   macro avg       0.29      0.27      0.25       155
+weighted avg       0.41      0.40      0.38       155
+
+confusion_matrix:
+ [[40  5  4  0  3  1  6]
+ [ 1  0  0  0  0  0  0]
+ [14  0  9  1  1  4  3]
+ [ 5  0  2  1  1  0  6]
+ [ 0  0  1  0  1  0  1]
+ [ 4  0  2  0  1  4  3]
+ [ 8  0  8  0  1  7  7]]
+acc[gpt3-逐个输出（单症型）]: 0.4
+total label count 155 , average count per sample:  1.0

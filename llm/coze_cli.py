@@ -194,23 +194,30 @@ def output_excel_data(file_path, sheet_name, data, mode):
 # ```json\n[\n  {\n    "症状简介": "反复黏液脓血便，腹痛，腹泻，里急后重，便前腹痛明显，左下腹胀满不适，肠鸣音亢进，失眠多梦，情绪不佳，口干口苦",\n    "推断理由": "患者的主要症状包括反复黏液脓血便，腹痛，腹泻，里急后重，这些症状符合大肠湿热证的主症。同时，患者还有便前腹痛明显，左下腹胀满不适，肠鸣音亢进，失眠多梦，情绪不佳，口干口苦等次症，舌红苔黄腻，脉弦细，这些都是大肠湿热证的典型表现。",\n    "推断症型": "1=大肠湿热"\n  },\n  {\n    "症状简介": "反复黏液脓血便，腹痛，腹泻，里急后重，便前腹痛明显，左下腹胀满不适，肠鸣音亢进，失眠多梦，情绪不佳，口干口苦",\n    "推断理由": "根据患者的情绪不佳，失眠多梦，以及口干口苦等症状，可以考虑肝郁脾虚证的可能性。患者的舌红苔黄腻，脉弦细也支持这一分型。",\n    "推断症型": "6=肝郁脾虚"\n  }\n]\n```
 def parse_raw_data(raw_data):
     # Use regular expression to extract the JSON string from the Markdown code block
-    match = re.search(r"```json\n(.*?)\n```", raw_data, re.DOTALL)
-    if match:
-        raw_data = match.group(1)
-        # Parse the JSON string into a Python object
-        try:
-            raw_data_json = json.loads(raw_data)
-            # Do something with the data
-        except json.JSONDecodeError as e:
-            raise Exception("Failed to parse JSON:", e)
-    else:
-        raise Exception("No JSON code block found.")
+    try:
+        raw_data_json = json.loads(raw_data)
+    except:
+        match = re.search(r"```json\n(.*?)\n```", raw_data, re.DOTALL)
+        if match:
+            raw_data = match.group(1)
+            # Parse the JSON string into a Python object
+            try:
+                raw_data_json = json.loads(raw_data)
+                # Do something with the data
+            except json.JSONDecodeError as e:
+                raise Exception("Failed to parse JSON:", e)
+        else:
+            raise Exception("No JSON code block found.")
 
     # create datafram's colname ["症状简介", "推断理由",“推断症型”]
-    col_name = ["症状简介", "推断理由","推断症型"]
-    data = ["","",""]
+    has_confidence = "置信度" in raw_data_json[0].keys()
+    col_name = ["症状简介", "推断理由","推断症型","置信度"] if has_confidence else ["症状简介", "推断理由","推断症型"]
+    data = ["","","",""] if has_confidence else ["","",""]
     for index, item in enumerate(raw_data_json):
-        data = [data[0] + f"({index}): {item[col_name[0]]}", data[1] + f"({index}): {item[col_name[1]]}", data[2] + f",{item[col_name[2]]}"]
+        if has_confidence:
+            data = [data[0] + f"({index}): {item[col_name[0]]}", data[1] + f"({index}): {item[col_name[1]]}", data[2] + f",{item[col_name[2]]}", data[3] + f",{item[col_name[3]]}"]
+        else:
+            data = [data[0] + f"({index}): {item[col_name[0]]}", data[1] + f"({index}): {item[col_name[1]]}", data[2] + f",{item[col_name[2]]}"]
 
     df = pd.DataFrame([data], columns=col_name)
     return df
